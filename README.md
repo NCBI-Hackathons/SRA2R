@@ -43,3 +43,18 @@ In R
 x = read.delim(text = system('~/sratoolkit.2.5.7-ubuntu64/bin/sra-pileup -r chr20:1530960-1540960 SRR2971307',intern=TRUE))
 ```
 
+# git setup
+
+```
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+```
+
+copy the contents of that string to the github settings/ssh keys location
+
+```
+git config --global user.name 'My Name'
+git config --global user.name 'myemail@email.com'
+```
+
+
