@@ -25,6 +25,8 @@ http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-stat
 sra-stat --quick --xml SRR390728
 (smaller file)
 sra-stat --quick --xml SRR2971307
+(small and no alignment)
+sra-stat --quick --xml ERR1162649
 ```
 
 ## sra-pileup
