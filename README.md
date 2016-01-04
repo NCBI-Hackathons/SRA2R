@@ -18,5 +18,13 @@ http://r-pkgs.had.co.nz/
 
 sra-stat example (http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-stat)
 ```
+(known good but large)
 sra-stat --quick --xml SRR390728
+(smaller file)
+sra-stat --quick --xml SRR2971307
+```
+
+sra-pileup (http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-pileup)
+```
+sra-pileup -r chr20:1530960-1540960 SRR2971307
 ```
