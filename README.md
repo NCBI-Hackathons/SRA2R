@@ -13,3 +13,5 @@ su - userXXX
 download.file('http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.7/sratoolkit.2.5.7-ubuntu64.tar.gz',destfile='~/sratoolkit.2.5.7-ubuntu64.tar.gz')
 untar('~/sratoolkit.2.5.7-ubuntu64.tar.gz',compressed=TRUE)
 ```
+
+http://r-pkgs.had.co.nz/
