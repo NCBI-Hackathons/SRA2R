@@ -16,7 +16,7 @@ untar('~/sratoolkit.2.5.7-ubuntu64.tar.gz',compressed=TRUE)
 
 http://r-pkgs.had.co.nz/
 
-# sra-stat example (http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-stat)
+sra-stat example (http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-stat)
 ```
 sra-stat --quick --xml SRR390728
 ```
