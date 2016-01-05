@@ -39,3 +39,26 @@ long readCount(Rcpp::String acc) {
   return run.getReadCount();
 }
 
+//' The reads in the read collection.
+//'
+//' This simply returns the full read count.
+//'
+//' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+//' @param n The number of reads to return
+//' @return the reads in the collection
+//' @export
+//' @examples
+//' reads('SRR000123')
+// [[Rcpp::export]]
+CharacterVector reads(Rcpp::String acc, int n) {
+  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+  ReadIterator rgi = run.getReads( Read::all );
+  CharacterVector out(n);
+  for(int i = 0; rgi.nextRead() & ( i < n ) ; i++) {
+    while ( rgi.nextFragment() ) {
+      out[i] = rgi.getFragmentBases().toString();
+    }
+  }
+  return out;
+}
+

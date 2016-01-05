@@ -9,8 +9,22 @@
 #' @return the number of reads in the collection
 #' @export
 #' @examples
-#' readCount('SRA000123')
+#' readCount('SRR000123')
 readCount <- function(acc) {
     .Call('SRA2R_readCount', PACKAGE = 'SRA2R', acc)
+}
+
+#' The reads in the read collection.
+#'
+#' This simply returns the full read count.
+#'
+#' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+#' @param n The number of reads to return
+#' @return the reads in the collection
+#' @export
+#' @examples
+#' reads('SRR000123')
+reads <- function(acc, n) {
+    .Call('SRA2R_reads', PACKAGE = 'SRA2R', acc, n)
 }
 
