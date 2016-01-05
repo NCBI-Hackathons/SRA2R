@@ -17,7 +17,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // reads
-CharacterVector reads(Rcpp::String acc, int n);
+List reads(Rcpp::String acc, int n);
 RcppExport SEXP SRA2R_reads(SEXP accSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
