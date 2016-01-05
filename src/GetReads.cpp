@@ -27,9 +27,17 @@ using namespace Rcpp;
 //' getFastqCount('SRR000123')
 // [[Rcpp::export]]
 long getFastqCount(Rcpp::String acc) {
-  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  long MAX_ROW = run.getReadCount ();
-  return MAX_ROW;
+  try {
+    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+    long MAX_ROW = run.getReadCount ();
+    return MAX_ROW;
+  } catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+    return -1;
+  } catch(...) { 
+    ::Rf_error("c++ exception (unknown reason)"); 
+    return -1;
+  }
 }
 
 
@@ -45,21 +53,28 @@ long getFastqCount(Rcpp::String acc) {
 //' getFastqReads('SRR000123')
 // [[Rcpp::export]]
 Rcpp::List getFastqReads(Rcpp::String acc) {
-  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  long MAX_ROW = run.getReadCount (); 
-  
-  ReadIterator rgi = run.getReads( Read::all );
-  
-  vector<std::string> out;
-  for(int i = 0; rgi.nextRead() ; i++) {
-    while ( rgi.nextFragment() ) {
-      out.push_back(rgi.getFragmentBases().toString());
+  try {
+    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+    long MAX_ROW = run.getReadCount (); 
+    
+    ReadIterator rgi = run.getReads( Read::all );
+    
+    vector<std::string> out;
+    for(int i = 0; rgi.nextRead() ; i++) {
+      while ( rgi.nextFragment() ) {
+        out.push_back(rgi.getFragmentBases().toString());
+      }
     }
+    return List::create (
+        _["reads"] = out
+    );
+  } catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+    return -1;
+  } catch(...) { 
+    ::Rf_error("c++ exception (unknown reason)"); 
+    return -1;
   }
-  return List::create (
-      _["reads"] = out
-  );
-  
 }
 
 //' The reads in the read collection.
@@ -74,24 +89,31 @@ Rcpp::List getFastqReads(Rcpp::String acc) {
 //' getFastqReadsWithQuality('SRR000123')
 // [[Rcpp::export]]
 Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
-  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  long MAX_ROW = run.getReadCount (); 
-  
-  ReadIterator rgi = run.getReads( Read::all );
-  CharacterVector reads(MAX_ROW);
-  CharacterVector qualities(MAX_ROW);
+  try {
+    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+    long MAX_ROW = run.getReadCount (); 
+    
+    ReadIterator rgi = run.getReads( Read::all );
+    CharacterVector reads(MAX_ROW);
+    CharacterVector qualities(MAX_ROW);
 
-  
-  for(int i = 0; rgi.nextRead() && ( i < MAX_ROW ) ; i++) {
-    while ( rgi.nextFragment() ) {
-      reads[i] = rgi.getFragmentBases().toString();
-      qualities[i] = rgi.getFragmentQualities().toString();
+    for(int i = 0; rgi.nextRead() && ( i < MAX_ROW ) ; i++) {
+      while ( rgi.nextFragment() ) {
+        reads[i] = rgi.getFragmentBases().toString();
+        qualities[i] = rgi.getFragmentQualities().toString();
+      }
     }
+    
+    List fastqRead = Rcpp::List::create(Rcpp::Named("read") = reads,
+                                        Rcpp::Named("quality") = qualities);
+    return fastqRead;
+  } catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+    return -1;
+  } catch(...) { 
+    ::Rf_error("c++ exception (unknown reason)"); 
+    return -1;
   }
-  
-  List fastqRead = Rcpp::List::create(Rcpp::Named("read") = reads,
-                                      Rcpp::Named("quality") = qualities);
-  return fastqRead;
 }
 
 //' The reads in the specified region.
@@ -108,46 +130,49 @@ Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
 //' getFastqReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
 // [[Rcpp::export]]
 Rcpp::List getFastqReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long start, long stop) {
-  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  
-  //testing whether there is alignment
   try {
-   long alignmentCount = run.getAlignmentCount();
-   if (alignmentCount==0) {
-     cout << "no aligned reads availabe";
-     return(Rcpp::List());
-   }
-  } catch (ngs::ErrorMsg ngsErr){
-    cout << ngsErr.toString();
-    return(Rcpp::List());
-  }
-  
-  try {
-  // get requested reference
-    ngs::Reference ref = run.getReference ( refname );
-    long count = stop - start + 1;
-    AlignmentIterator alignit = ref.getAlignmentSlice ( start, count, Alignment::primaryAlignment );
-    vector<std::string> reads;
-    vector<std::string> qualities;
+    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
     
-    while( alignit.nextAlignment() ) {
-        reads.push_back(alignit.getFragmentBases().toString());
+    //testing whether there is alignment
+    try {
+      long alignmentCount = run.getAlignmentCount();
+      if (alignmentCount==0) {
+        cout << "no aligned reads availabe";
+        return(Rcpp::List());
+      }
+    } catch (ngs::ErrorMsg ngsErr){
+      cout << ngsErr.toString();
+      return(Rcpp::List());
     }
-    return List::create (
-        _["reads"] = reads
-    );
     
-  } catch (ngs::ErrorMsg ngsErr){
-    cout << ngsErr.toString();
-    return(Rcpp::List());
+    try {
+      // get requested reference
+      ngs::Reference ref = run.getReference ( refname );
+      long count = stop - start + 1;
+      AlignmentIterator alignit = ref.getAlignmentSlice ( start, count, Alignment::primaryAlignment );
+      vector<std::string> reads;
+      vector<std::string> qualities;
+      
+      while( alignit.nextAlignment() ) {
+        reads.push_back(alignit.getFragmentBases().toString());
+      }
+      return List::create (
+          _["reads"] = reads
+      );
+      
+    } catch (ngs::ErrorMsg ngsErr){
+      cout << ngsErr.toString();
+      return(Rcpp::List());
+    }
+  } catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+    return -1;
+  } catch(...) { 
+    ::Rf_error("c++ exception (unknown reason)"); 
+    return -1;
   }
-  
-  
   //hopefully this gets the number of counts
  // long MAX_ROW = ref.getAlignmentCount(); 
   //CharacterVector reads(MAX_ROW);
   //CharacterVector qualities(MAX_ROW);
-  
-  
-  
 }
