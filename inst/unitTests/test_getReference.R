@@ -33,5 +33,5 @@ function() {
     sra = getReference('SRR390728')
     checkEquals(Accession(sra),'SRR390728')
     checkEquals(nrow(Table(sra)),50)
-    checkEquals(ncol(Table(sra)),1)
+    checkEquals(ncol(Table(sra)),4)
 }
