@@ -14,6 +14,8 @@ using namespace ngs;
 using namespace std;
 using namespace Rcpp;
 
+
+
 //' The readCount in the read collection.
 //'
 //' This simply returns the full read count.
@@ -30,41 +32,62 @@ long getFastqCount(Rcpp::String acc) {
   return MAX_ROW;
 }
 
-//' Get Fastq in the read collection
-//' 
-//' Fastq strings (without the quality) are returned as a List of strings
+
+//' The reads in the read collection.
+//'
+//' This returns the all reads.
+//'
 //' @param acc An accession or a path to an actual SRA file (with .sra suffix)
-//' @return List of reads
+//' @param n The number of reads to return
+//' @return the reads in the collection
 //' @export
 //' @examples
-//' getFastqCount('SRR000123')
+//' getFastqReads('SRR000123')
 // [[Rcpp::export]]
-vector<string> getFastq(Rcpp::String acc, int n) {
-  // open requested accession using SRA implementation of the API
+CharacterVector getFastqReads(Rcpp::String acc) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  //Rcpp::String run_name = run.getName ();
-  
-  // compute window to iterate through
   long MAX_ROW = run.getReadCount (); 
   
-  //start iterator on reads
-  ReadIterator it = run.getReadRange ( 1, MAX_ROW, Read::all );
-  
-  long i;
-  for ( i = 0; it.nextRead (); ++ i )
-  {
-    cout << it.getReadId();
-    
-    //iterate through fragments
-    while ( it.nextFragment () ){
-      cout << '\t' <<  it.getFragmentBases ();
-      cout << '\t' <<  it.getFragmentQualities ();
+  ReadIterator rgi = run.getReads( Read::all );
+  CharacterVector out(MAX_ROW);
+  for(int i = 0; rgi.nextRead() & ( i < MAX_ROW ) ; i++) {
+    while ( rgi.nextFragment() ) {
+      out[i] = rgi.getFragmentBases().toString();
     }
-    
-    cout << '\n';
+  }
+  return out;
+}
+
+//' The reads in the read collection.
+//'
+//' This returns the all reads.
+//'
+//' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+//' @param n The number of reads to return
+//' @return the reads in the collection
+//' @export
+//' @examples
+//' getFastqReadsWithQuality('SRR000123')
+// [[Rcpp::export]]
+Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
+  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+  long MAX_ROW = run.getReadCount (); 
+  
+  ReadIterator rgi = run.getReads( Read::all );
+  CharacterVector reads(MAX_ROW);
+  CharacterVector qualities(MAX_ROW);
+
+  
+  for(int i = 0; rgi.nextRead() & ( i < MAX_ROW ) ; i++) {
+    while ( rgi.nextFragment() ) {
+      reads[i] = rgi.getFragmentBases().toString();
+      qualities[i] = rgi.getFragmentQualities().toString();
+    }
   }
   
-  cerr << "Read " << i << " spots for " << run_name << '\n';
+  List fastqRead = Rcpp::List::create(Rcpp::Named("read") = reads,
+                                      Rcpp::Named("quality") = qualities);
+  return fastqRead;
 }
 
 
