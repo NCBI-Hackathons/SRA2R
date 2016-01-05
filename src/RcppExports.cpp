@@ -16,3 +16,15 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// reads
+CharacterVector reads(Rcpp::String acc, int n);
+RcppExport SEXP SRA2R_reads(SEXP accSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    __result = Rcpp::wrap(reads(acc, n));
+    return __result;
+END_RCPP
+}
