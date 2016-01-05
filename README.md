@@ -73,5 +73,12 @@ x = read.delim(text = system('~/sratoolkit.2.5.7-ubuntu64/bin/sra-pileup -r chr2
 - LD_LIBRARY_PATH = /usr/local/ngs/ngs-sdk/lib64:/usr/local/ncbi/ncbi-vdb/lib64:
 
 
+## R and Rcpp documentation of interest
+
+- http://dirk.eddelbuettel.com/code/rcpp/Rcpp-quickref.pdf
+- http://adv-r.had.co.nz/Rcpp.html
+- http://r-pkgs.had.co.nz/
+- http://statr.me/rcpp-note/index.html
+- https://cran.r-project.org/web/packages/Rcpp/vignettes/
 
 
