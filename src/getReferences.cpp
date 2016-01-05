@@ -35,10 +35,10 @@ using namespace Rcpp;
 //' @return the number of reads in the collection
 //' @export
 //' @examples
-//' getReference('SRR000123')
+//' getReference('SRR390728')
 // [[Rcpp::export]]
 
-List getReference(Rcpp::String acc) {
+DataFrame getReference(Rcpp::String acc) {
   // open requested accession using SRA implementation of the API
    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
 
@@ -47,13 +47,20 @@ List getReference(Rcpp::String acc) {
    // get all references
    ReferenceIterator it ( run.getReferences () );
    vector<std::string> out;
+   vector<std::string> out2;
+   vector<long> out3;
+   vector<long> out4;
+   
+   
        while( it.nextReference () ) {
          out.push_back(it.getCanonicalName()) ;
-         out.push_back(it.getCommonName()) ;
+         out2.push_back(it.getCommonName()) ;
+         out3.push_back(it.getLength()) ;
+         out4.push_back(it.getAlignmentCount());
        }
        
-       return List::create (
-           _["getReference"] = out
+       return DataFrame::create (
+           _["CanonicalNames"] = out, _["CommonNames"] = out2, _["Length"] = out3, _["AlignmentCount"] = out4
        );
 }
   
