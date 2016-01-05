@@ -1,3 +1,4 @@
+library(SRA2R)
 context("getReads")
 
 test_that("getReads returns reads from a run", {
