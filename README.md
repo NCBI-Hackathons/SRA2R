@@ -59,4 +59,13 @@ git config --global user.name 'My Name'
 git config --global user.name 'myemail@email.com'
 ```
 
+# ncbi ngs SDK details
+
+- /usr/include/ngs (interfaces for C++ ngs)
+- /usr/include/ncbi-vdb (NGS.hpp)
+- /usr/local/share/doc/ngs (javadoc)
+- LD_LIBRARY_PATH = /usr/local/ngs/ngs-sdk/lib64:/usr/local/ncbi/ncbi-vdb/lib64:
+
+
+
 
