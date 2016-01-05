@@ -116,7 +116,8 @@ Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
   }
 }
 
-//' The reads in the specified region.
+
+//' The reads in the specified region in an SRA record.
 //'
 //' This returns the all reads in the specified region.
 //'
@@ -127,12 +128,12 @@ Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
 //' @return the reads in the collection
 //' @export
 //' @examples
-//' getFastqReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+//' getSRAReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
 // [[Rcpp::export]]
-Rcpp::List getFastqReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long start, long stop) {
+Rcpp::List getSRAReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long start, long stop) {
   try {
-    ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-  
+    ReadCollection   run = ncbi::NGS::openReadCollection ( acc );
+    
     //testing whether there is alignment
     try {
       long alignmentCount = run.getAlignmentCount();
@@ -147,13 +148,96 @@ Rcpp::List getFastqReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long 
     
     try {
        if (!run.hasReference ( refname )) {
-        std::string errorAndRefNames = "The accession id does not have the reference, the options are:";
+        std::string errorAndRefNames = "The accession id "+ string(acc) +" does not have the reference " +  
+          string(refname) +  ". The options are:";
         ReferenceIterator refIter = run.getReferences();
         while( refIter.nextReference() ) {
           errorAndRefNames += " " + refIter.getCanonicalName();
         }
         throw std::range_error(errorAndRefNames); 
        }
+    } catch (ngs::ErrorMsg ngsErr){
+      forward_exception_to_r(ngsErr);
+      return(Rcpp::List());
+    }
+    
+    try {
+      // get requested reference
+      ngs::Reference ref = run.getReference ( refname );
+      
+      long referenceLength = ref.getLength();
+      if (stop<start || stop>referenceLength || start<1) {
+        throw std::range_error("wrong reference range, reference length = " + toString(referenceLength)); 
+        return(Rcpp::List());
+      } 
+      
+      long count = stop - start + 1;
+      AlignmentIterator alignit = ref.getAlignmentSlice ( start, count, Alignment::primaryAlignment );
+      vector<std::string> reads;
+      vector<std::string> qualities;
+      
+      while( alignit.nextAlignment() ) {
+        reads.push_back(alignit.getFragmentBases().toString());
+      }
+      return List::create (
+          _["reads"] = reads
+      );
+      
+    } catch (ngs::ErrorMsg ngsErr){
+      forward_exception_to_r(ngsErr);
+      return(Rcpp::List());
+    }
+  } catch(std::exception &ex) {	
+    forward_exception_to_r(ex);
+    return(Rcpp::List());
+  } catch(...) { 
+    ::Rf_error("c++ exception (unknown reason)"); 
+    return(Rcpp::List());
+  } //try ReadCollection run
+  
+}
+
+
+//' The reads in the specified region in an SRA record.
+//'
+//' This returns the all reads in the specified region.
+//'
+//' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+//' @param ref The reference name 
+//' @param start Start position (inclusive)
+//' @param stop End position (inclusive)
+//' @return the reads in the collection
+//' @export
+//' @examples
+//' getBamReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+// [[Rcpp::export]]
+Rcpp::List getBamReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long start, long stop) {
+  try {
+    
+    ReadCollection run = NGS_BAM::openReadCollection ( acc );
+       
+    //testing whether there is alignment
+    try {
+      long alignmentCount = run.getAlignmentCount();
+      if (alignmentCount==0) {
+        throw std::range_error("no aligned reads availabe"); 
+        return(Rcpp::List());
+      }
+    } catch (ngs::ErrorMsg ngsErr){
+      forward_exception_to_r(ngsErr);
+      return(Rcpp::List());
+    }
+    
+    try {
+      if (!run.hasReference ( refname )) {
+        std::string errorAndRefNames = "The accession id "+ string(acc) +" does not have the reference " +  
+          string(refname) +  ". The options are:";
+        ReferenceIterator refIter = run.getReferences();
+        while( refIter.nextReference() ) {
+          errorAndRefNames += " " + refIter.getCanonicalName();
+        }
+        throw std::range_error(errorAndRefNames); 
+      }
     } catch (ngs::ErrorMsg ngsErr){
       forward_exception_to_r(ngsErr);
       return(Rcpp::List());
