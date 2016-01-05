@@ -44,18 +44,22 @@ long getFastqCount(Rcpp::String acc) {
 //' @examples
 //' getFastqReads('SRR000123')
 // [[Rcpp::export]]
-CharacterVector getFastqReads(Rcpp::String acc) {
+Rcpp::List getFastqReads(Rcpp::String acc) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
   long MAX_ROW = run.getReadCount (); 
   
   ReadIterator rgi = run.getReads( Read::all );
-  CharacterVector out(MAX_ROW);
-  for(int i = 0; rgi.nextRead() & ( i < MAX_ROW ) ; i++) {
+  
+  vector<std::string> out;
+  for(int i = 0; rgi.nextRead() ; i++) {
     while ( rgi.nextFragment() ) {
-      out[i] = rgi.getFragmentBases().toString();
+      out.push_back(rgi.getFragmentBases().toString());
     }
   }
-  return out;
+  return List::create (
+      _["reads"] = out
+  );
+  
 }
 
 //' The reads in the read collection.
@@ -78,7 +82,7 @@ Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
   CharacterVector qualities(MAX_ROW);
 
   
-  for(int i = 0; rgi.nextRead() & ( i < MAX_ROW ) ; i++) {
+  for(int i = 0; rgi.nextRead() && ( i < MAX_ROW ) ; i++) {
     while ( rgi.nextFragment() ) {
       reads[i] = rgi.getFragmentBases().toString();
       qualities[i] = rgi.getFragmentQualities().toString();
@@ -90,4 +94,60 @@ Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
   return fastqRead;
 }
 
-
+//' The reads in the specified region.
+//'
+//' This returns the all reads in the specified region.
+//'
+//' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+//' @param ref The reference name 
+//' @param start Start position (inclusive)
+//' @param stop End position (inclusive)
+//' @return the reads in the collection
+//' @export
+//' @examples
+//' getFastqReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+// [[Rcpp::export]]
+Rcpp::List getFastqReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long start, long stop) {
+  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+  
+  //testing whether there is alignment
+  try {
+   long alignmentCount = run.getAlignmentCount();
+   if (alignmentCount==0) {
+     cout << "no aligned reads availabe";
+     return(Rcpp::List());
+   }
+  } catch (ngs::ErrorMsg ngsErr){
+    cout << ngsErr.toString();
+    return(Rcpp::List());
+  }
+  
+  try {
+  // get requested reference
+    ngs::Reference ref = run.getReference ( refname );
+    long count = stop - start + 1;
+    AlignmentIterator alignit = ref.getAlignmentSlice ( start, count, Alignment::primaryAlignment );
+    vector<std::string> reads;
+    vector<std::string> qualities;
+    
+    while( alignit.nextAlignment() ) {
+        reads.push_back(alignit.getFragmentBases().toString());
+    }
+    return List::create (
+        _["reads"] = reads
+    );
+    
+  } catch (ngs::ErrorMsg ngsErr){
+    cout << ngsErr.toString();
+    return(Rcpp::List());
+  }
+  
+  
+  //hopefully this gets the number of counts
+ // long MAX_ROW = ref.getAlignmentCount(); 
+  //CharacterVector reads(MAX_ROW);
+  //CharacterVector qualities(MAX_ROW);
+  
+  
+  
+}
