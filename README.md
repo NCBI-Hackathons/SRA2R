@@ -29,7 +29,7 @@ copy the contents of that string to the github settings/ssh keys location
 
 ```
 git config --global user.name 'My Name'
-git config --global user.name 'myemail@email.com'
+git config --global user.email 'myemail@email.com'
 ```
 
 ### Developing on the package
