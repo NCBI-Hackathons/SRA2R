@@ -1,0 +1,1 @@
+PKG_LIBS = -L/usr/local/ncbi/ncbi-vdb/lib64/ -L/usr/local/ngs/ngs-sdk/lib64 -lncbi-ngs-c++ -lngs-c++ -lngs-bam-c++ -lncbi-ngs-c++ -lncbi-vdb-static -lngs-adapt-c++

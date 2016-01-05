@@ -24,24 +24,18 @@ using namespace Rcpp;
 //   http://gallery.rcpp.org/
 //s
 
-//
+//' The readCount in the read collection.
+//'
+//' This simply returns the full read count.
+//'
+//' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+//' @return the number of reads in the collection
+//' @export
+//' @examples
+//' readCount('SRR000123')
 // [[Rcpp::export]]
-NumericVector readCount(CharacterVector accVec) {
-  ReadCollection run = ncbi::NGS::openReadCollection ( "SRR619505" );
-  return 123;
+long readCount(Rcpp::String acc) {
+  ReadCollection run = ncbi::NGS::openReadCollection ( acc );
+  return run.getReadCount();
 }
 
-// [[Rcpp::export]]
-NumericVector timesTwo(NumericVector x) {
-  return x * 2;
-}
-
-
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically 
-// run after the compilation.
-//
-
-/*** R
-timesTwo(42)
-*/

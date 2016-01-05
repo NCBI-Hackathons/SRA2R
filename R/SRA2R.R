@@ -11,6 +11,9 @@
 #' sra-stat
 #' sra-pileup
 #'
+#' @useDynLib SRA2R
+#' @importFrom Rcpp sourceCpp
+#'
 #' @docType package
 #' @name SRA2R
 NULL
