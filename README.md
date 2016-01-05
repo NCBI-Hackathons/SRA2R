@@ -32,6 +32,16 @@ git config --global user.name 'My Name'
 git config --global user.name 'myemail@email.com'
 ```
 
+### Developing on the package
+
+Checkout the package using git (or Rstudio) and change the working directory to the 
+SRA2R directory (with the DESCRIPTION file in it).
+
+```
+install.packages('devtools')
+devtools::document()
+devtools::load_all()
+```
 
 ## SRA ToolKit examples
 
