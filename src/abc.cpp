@@ -14,15 +14,9 @@ using namespace ngs;
 using namespace std;
 using namespace Rcpp;
 
-// This is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp 
-// function (or via the Source button on the editor toolbar). Learn
-// more about Rcpp at:
-//
-//   http://www.rcpp.org/
-//   http://adv-r.had.co.nz/Rcpp.html
-//   http://gallery.rcpp.org/
-//s
+// The function below just returns a single value from the API.
+// I just need to match up the return type of the function
+// to the return type of the API call.
 
 //' The readCount in the read collection.
 //'
@@ -39,6 +33,10 @@ long readCount(Rcpp::String acc) {
   return run.getReadCount();
 }
 
+// The function below demonstrates using a 
+// std::vector template to accumulate reads (strings)
+// and return them to R as an R list.
+
 //' The reads in the read collection.
 //'
 //' This simply returns the full read count.
@@ -50,15 +48,17 @@ long readCount(Rcpp::String acc) {
 //' @examples
 //' reads('SRR000123')
 // [[Rcpp::export]]
-CharacterVector reads(Rcpp::String acc, int n) {
+List reads(Rcpp::String acc, int n) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
   ReadIterator rgi = run.getReads( Read::all );
-  CharacterVector out(n);
-  for(int i = 0; rgi.nextRead() & ( i < n ) ; i++) {
+  vector<std::string> out;
+  for(int i = 0; rgi.nextRead() ; i++) {
     while ( rgi.nextFragment() ) {
-      out[i] = rgi.getFragmentBases().toString();
+      out.push_back(rgi.getFragmentBases().toString());
     }
   }
-  return out;
+  return List::create (
+     _["reads"] = out
+  );
 }
 
