@@ -146,6 +146,20 @@ Rcpp::List getFastqReadsWithRegion(Rcpp::String acc, Rcpp::String refname, long 
     }
     
     try {
+       if (!run.hasReference ( refname )) {
+        std::string errorAndRefNames = "The accession id does not have the reference, the options are:";
+        ReferenceIterator refIter = run.getReferences();
+        while( refIter.nextReference() ) {
+          errorAndRefNames += " " + refIter.getCanonicalName();
+        }
+        throw std::range_error(errorAndRefNames); 
+       }
+    } catch (ngs::ErrorMsg ngsErr){
+      forward_exception_to_r(ngsErr);
+      return(Rcpp::List());
+    }
+    
+    try {
       // get requested reference
       ngs::Reference ref = run.getReference ( refname );
       
