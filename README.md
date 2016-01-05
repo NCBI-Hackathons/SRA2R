@@ -1,6 +1,8 @@
 # SRA2R
 SRA2R, a package to import SRA data directly into R
 
+## The AWS Instance Details
+
 http://ec2-52-90-90-120.compute-1.amazonaws.com/
 
 ```
@@ -14,9 +16,26 @@ download.file('http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.7/sratoolkit.2.5.7-
 untar('~/sratoolkit.2.5.7-ubuntu64.tar.gz',compressed=TRUE)
 ```
 
-http://r-pkgs.had.co.nz/
+### git setup for github
 
-## sra-stat example 
+Before using git with github, you'll want to do this on the AWS instance.
+
+```
+ssh-keygen
+cat ~/.ssh/id_rsa.pub
+```
+
+copy the contents of that string to the github settings/ssh keys location
+
+```
+git config --global user.name 'My Name'
+git config --global user.name 'myemail@email.com'
+```
+
+
+## SRA ToolKit examples
+
+### sra-stat example 
 
 http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-stat
 
@@ -29,7 +48,7 @@ sra-stat --quick --xml SRR2971307
 sra-stat --quick --xml ERR1162649
 ```
 
-## sra-pileup
+### sra-pileup
 
 http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=toolkit_doc&f=sra-pileup
 
@@ -45,21 +64,8 @@ In R
 x = read.delim(text = system('~/sratoolkit.2.5.7-ubuntu64/bin/sra-pileup -r chr20:1530960-1540960 SRR2971307',intern=TRUE))
 ```
 
-# git setup
 
-```
-ssh-keygen
-cat ~/.ssh/id_rsa.pub
-```
-
-copy the contents of that string to the github settings/ssh keys location
-
-```
-git config --global user.name 'My Name'
-git config --global user.name 'myemail@email.com'
-```
-
-# ncbi ngs SDK details
+## ncbi ngs SDK details
 
 - /usr/include/ngs (interfaces for C++ ngs)
 - /usr/include/ncbi-vdb (NGS.hpp)
