@@ -27,12 +27,11 @@ using namespace Rcpp;
 //   http://www.rcpp.org/
 //   http://adv-r.had.co.nz/Rcpp.html
 //   http://gallery.rcpp.org/
-//s
-
+//
 //' The readCount in the read collection.
 //'
 //' This simply returns the full read count.
-//'
+//' @author Nick Bernstein
 //' @param acc An accession or a path to an actual SRA file (with .sra suffix)
 //' @param refname Reference name for pile up
 //' @param start An in for position of start of pileup
