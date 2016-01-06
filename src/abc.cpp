@@ -73,12 +73,12 @@ SEXP reads(Rcpp::String acc, int n, SEXP lkup) {
   return r_ans;
 }
 
-//' The reads in the read collection.
+//' Example of creating a BStringSet in C++
 //'
-//' This simply returns the full read count.
 //'
 //' @param acc An accession or a path to an actual SRA file (with .sra suffix)
 //' @param n The number of reads to return
+//' @param lkup lkup = get_seqtype_conversion_lookup('B','DNA')
 //' @return the reads in the collection
 //' @export
 //' @examples
