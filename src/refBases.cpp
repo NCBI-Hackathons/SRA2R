@@ -36,10 +36,6 @@ using namespace Rcpp;
  *  return sub-sequence bases for Reference
  *  "offset" is zero-based
  */
-
-/* getLength
- *  returns the length of the reference sequence
- */
 // [[Rcpp::export]]
 List refBases(Rcpp::String acc) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
@@ -54,4 +50,3 @@ List refBases(Rcpp::String acc) {
   return Rcpp::List::create(Rcpp::Named("referencebases") = rlist);
   
 }
-
