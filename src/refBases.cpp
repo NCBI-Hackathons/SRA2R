@@ -36,7 +36,6 @@ using namespace Rcpp;
  *  return sub-sequence bases for Reference
  *  "offset" is zero-based
  */
-
 // [[Rcpp::export]]
 List refBases(Rcpp::String acc) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
