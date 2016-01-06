@@ -12,7 +12,14 @@
 #' sra-pileup
 #'
 #' @useDynLib SRA2R
+#'
+#' @import methods
+#' @import S4Vectors
+#' @import XVector
+#' @import IRanges
+#' @import Biostrings
 #' @importFrom Rcpp sourceCpp
+#' 
 #'
 #' @docType package
 #' @name SRA2R

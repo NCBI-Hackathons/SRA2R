@@ -7,6 +7,8 @@ Author: Who wrote it
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
+VignetteBuilder: knitr
+Suggests: BiocStyle, knitr, rmarkdown
+LinkingTo: Rcpp, Biostrings, XVector, IRanges, S4Vectors
 RoxygenNote: 5.0.1
 Imports: Rcpp (>= 0.11.0)
-LinkingTo: Rcpp
