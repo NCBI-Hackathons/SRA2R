@@ -34,46 +34,85 @@ Illumina Solexa and Applied Biosystems SOLiD.
 The following dependencies are necessary for using this package: 
 *Biostrings*, *XVector*, *IRanges*, *S4Vectors*.
 
-### Stats
-
-The *readCount2* function contains information of run acession 
-number, and count the total number reads and reads after alingnment.
 ```{r}
-library(SRA2R)
-readCount2('SRR2971307')
+library(knitr)
+opts_chunk$set(cache=TRUE)
 ```
 
-*getReference* makes possible get access to all chomosome references 
+## Stats
+
+The **readCount2** function contains information of a specific run 
+acession number, and count the total number reads and reads after 
+alingnment.
+
+```{r}
+library(SRA2R)
+readCount2('SRR789392')
+```
+
+**getReference** makes possible get access to all chomosome references 
 and extract information as the canonical and common names, length and
 alignment counts for each. 
+
 ```{r}
-getReference('SRR2971307')
+getReference('SRR789392')
 ```
 
 To have access to a complete nucleotide sequence for each reference, 
-the function *refBases* will return a list with the full sequence.
+the function **refBases** will return a list with the full sequence.
 (NOT SURE IF THIS ONE SHOULD BE HERE OR NOT, IN STATS)
-```{r}
-refBases('SRR2971307')
+
+```{r rb,eval=FALSE}
+rb = refBases('SRR789392')
 ```
 
 ## Getting Reads 
 
 To get access to the reads in a read collection, you can use any of 
-the following functions:
-*getFastqCount* simply returns the full read count;
-*getFastqReads* returns a list with the entire sequence of all reads;
-*getFastqReadsWithQuality* returns a list with the quality 
-information for the entire sequence of all reads
-```{r}
-getFastqCount('SRR2971307')
-```
+the following functions: **getFastqCount** simply returns the full read
+count.
 
 ```{r}
-getFastqReads('SRR2971307',10)
+getFastqCount('SRR789392')
 ```
 
+**getFastqReads** returns a list with the entire sequence of all reads
+in a read collection. The functions has two parameters: the first one
+is related to the run accession number following by an integer 
+associated to the vizualization of the file i.e., if you use the 
+number 10, will returns the first 10 rows of the sequence. If you 
+change this number to -1, it will return the entire sequence.
+
 ```{r}
-getFastqReadsWithQuality('SRR2971307',10)
+getFastqReads('SRR789392',10)
+```
+
+**getFastqReadsWithQuality** returns a list with two arguments: the 
+first one is the full sequence and the second cone, the quality score.
+The second argument follow the same parameters as **getFastqReads**.
+
+```{r}
+getFastqReadsWithQuality('SRR789392',10)
+```
+
+To look the sequence for a specific region its necessary inform four 
+parameters for **getSRAReadsWithRegion** function: the first one 
+comprises the run accession number, the second is the canonical name 
+of the reference, and the third and fourth positions are related to 
+the start and end position of the region of interest.
+
+```{r}
+getSRAReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+```
+
+## Alignment
+
+The function **alignReadsWithRegion** returns a list with information
+ about the alignment for a SRA file. Its possible to access the 
+ *readID*, *Canonical Name*, *position*, *longCigar*, 
+ *mappingQuality*, *alignmentLength* and *sequence*.
+
+```{r}
+alignReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
 ```
 
