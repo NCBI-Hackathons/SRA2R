@@ -1,0 +1,63 @@
+Getting fastq reads and quality from SRA
+========================================================
+author: 
+date: 
+
+
+System Time
+========================================================
+
+```{r, echo=FALSE}
+library(SRA2R)
+library(reshape)
+library(Rmisc)
+library(ShortRead)
+```
+
+Getting 100 reads from the NA12878 sample sequenced by Complete Genomics took:
+```{r, echo=FALSE}
+system.time(NA12878CGI<-getFastqReadsWithQuality('SRR1238716',100))
+```
+
+Getting 100 reads from the NA12878 sample sequenced by Illumina took:
+```{r, echo=FALSE}
+system.time(NA12878ILMN<-getFastqReadsWithQuality('ERR1051710',100))
+```
+
+
+Quality scores vs. cycle plots
+========================================================
+Complete Genomics
+```{r, echo=FALSE}
+library(ggplot2)
+NA12878.cgi.quality<-FastqQuality( NA12878CGI[[2]])
+NA12878.cgi.qualityScores<-data.frame(as(NA12878.cgi.quality,"matrix"))
+NA12878.cgi.qualityScores$read<-rownames(NA12878.cgi.qualityScores)
+NA12878.cgi.qualityScores.melt<-melt(NA12878.cgi.qualityScores)
+NA12878.cgi.qualityScores.melt.withSE <- summarySE(NA12878.cgi.qualityScores.melt, measurevar="value", groupvars=c("variable"))
+
+# Error bars represent standard error of the mean
+ggplot(NA12878.cgi.qualityScores.melt.withSE, aes(x=variable, y=value)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=value-se, ymax=value+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) + scale_x_discrete(labels=c(1:width(NA12878.cgi.quality)[1]))+xlab("cycles")+ylab("quality scores")+labs(title = "CGI quality scores") 
+```
+***
+Illumina
+```{r, echo=FALSE}
+NA12878.ilmn.quality<-FastqQuality( NA12878ILMN[[2]])
+NA12878.ilmn.qualityScores<-data.frame(as(NA12878.ilmn.quality,"matrix"))
+
+NA12878.ilmn.qualityScores$read<-rownames(NA12878.ilmn.qualityScores)
+NA12878.ilmn.qualityScores.melt<-melt(NA12878.ilmn.qualityScores)
+NA12878.ilmn.qualityScores.melt.withSE <- summarySE(NA12878.ilmn.qualityScores.melt, measurevar="value", groupvars=c("variable"))
+
+# Error bars represent standard error of the mean
+ggplot(NA12878.ilmn.qualityScores.melt.withSE, aes(x=variable, y=value)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=value-se, ymax=value+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) + scale_x_discrete(labels=c(1:width(NA12878.ilmn.quality)[1]))
+
+```
