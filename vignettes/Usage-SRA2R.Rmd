@@ -23,6 +23,8 @@ Developed in 2007 to allocate raw sequencing data from biological
 studies, processed by different platforms as Roche-454 Life Sciences, 
 Illumina Solexa and Applied Biosystems SOLiD.
 
+
+
 # Usage
 
 
