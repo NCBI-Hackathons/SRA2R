@@ -13,6 +13,13 @@ vignette: >
 ---
 
 # Introduction
+Initially named as Short Read Archive (SRA), the Sequencing Read 
+Archive is an initiative from from the National Center for 
+Biotechnology Information (NCBI), the European Bioinformatics 
+Institute (EBI), and the DNA Data Bank of Japan (DDBJ), and it was 
+developed to allocate raw sequencing data from biological studies, 
+processed by different platforms as Roche-454 Life Sciences, Illumina 
+Solexa and Applied Biosystems SOLiD.
 
 # Usage
 
