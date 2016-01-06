@@ -15,16 +15,19 @@ reads <- function(acc, n, lkup) {
     .Call('SRA2R_reads', PACKAGE = 'SRA2R', acc, n, lkup)
 }
 
-#' The reads in the read collection.
+#' Example of creating a BStringSet in C++
 #'
-#' This simply returns the full read count.
 #'
 #' @param acc An accession or a path to an actual SRA file (with .sra suffix)
 #' @param n The number of reads to return
+#' @param lkup lkup = get_seqtype_conversion_lookup('B','DNA')
 #' @return the reads in the collection
 #' @export
 #' @examples
-#' read1('SRR000123')
+#' require(Biostrings)
+#' lkup = get_seqtype_conversion_lookup('B','DNA')
+#' x = SRA2R:::read1('SRR000123',1000,lkup)
+#' x
 read1 <- function(classname, acc, lkup) {
     .Call('SRA2R_read1', PACKAGE = 'SRA2R', classname, acc, lkup)
 }

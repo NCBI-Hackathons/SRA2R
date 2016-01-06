@@ -66,6 +66,8 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
   vector<long> PileDepth;
   vector<char> AlignedQuality;
   vector<std::string>  AllAlignedQuality;
+  vector<char> AlignedBases;
+  vector<std::string>  AllAlignedBases;
   
   while ( it.nextPileup ())
   {
@@ -75,23 +77,85 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
         RefBase.push_back( it.getReferenceBase () );
         PileDepth.push_back(it.getPileupDepth ( ) );
         AlignedQuality.clear();
+        AlignedBases.clear();
+        std::string base;          
           
         while ( it.nextPileupEvent() ){
           
-        AlignedQuality.push_back( it.getAlignmentQuality() );
-       
+          AlignedQuality.push_back( it.getAlignmentQuality() );
+          PileupEvent::PileupEventType e = it.getEventType ();
+            
+            if(e & PileupEvent::alignment_start)
+            {
+              base += '^';
+              base += (char) (it.getMappingQuality() + 33 );
+            }
+            if(e & PileupEvent::insertion)
+            {
+              base += '+';
+              StringRef ibases= it.getInsertionBases();
+              int c = ibases.size();
+              char buf[64];
+              if(e & PileupEvent::alignment_minus_strand)
+              {
+                char *b = buf + sprintf(buf,"%d",c);
+                const char *s = ibases.data();
+                for(int i=0; i<c;i++,b++,s++)
+                {
+                  *b=tolower(*s);
+                }
+                *b='\0';
+              }
+              else 
+                sprintf(buf,"%d%.*s",c,c,ibases.data());
+              base += buf;
+            }
+            if ( ( e & PileupEvent::alignment_minus_strand ) != 0 )
+            {
+              switch ( e & 7 )
+              {
+              case PileupEvent::deletion:
+                base += '<';
+                break;
+              case PileupEvent::match:
+                base += ',';
+                break;
+              case PileupEvent::mismatch:
+                base += tolower(it.getAlignmentBase ());
+                break;
+              }
+            }
+            else
+            {
+              switch ( e & 7 )
+              {
+              case PileupEvent::deletion:
+                base += '>';
+                break;
+              case PileupEvent::match:
+                base += '.';
+                break;
+              case PileupEvent::mismatch:
+                base += toupper(it.getAlignmentBase ());
+                break;
+              }
+            }
+            if(e & PileupEvent::alignment_stop)
+            {
+              base += '$';
+            }
+            
         }
+        AllAlignedBases.push_back( base);  
+        
         std::string str(AlignedQuality.begin(),AlignedQuality.end());
         AllAlignedQuality.push_back( str );  
         
-        }
-        
-        
- } 
-  
+        } 
+  }
   
   return DataFrame::create (
-      _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth, _["AllAlignedQuality"] = AllAlignedQuality
+      _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth , _["AllAlignedBases"] = AllAlignedBases, _["AllAlignedQuality"] = AllAlignedQuality
     
   );
   
