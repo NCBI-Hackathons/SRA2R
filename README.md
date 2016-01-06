@@ -1,6 +1,10 @@
 # SRA2R
 SRA2R, a package to import SRA data directly into R
 
+## The Vignette
+
+http://watson.nci.nih.gov/~sdavis/sra.html
+
 ## The AWS Instance Details
 
 http://ec2-52-90-90-120.compute-1.amazonaws.com/
