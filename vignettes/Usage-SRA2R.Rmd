@@ -59,3 +59,21 @@ refBases('SRR2971307')
 
 ## Getting Reads 
 
+To get access to the reads in a read collection, you can use any of 
+the following functions:
+*getFastqCount* simply returns the full read count;
+*getFastqReads* returns a list with the entire sequence of all reads;
+*getFastqReadsWithQuality* returns a list with the quality 
+information for the entire sequence of all reads
+```{r}
+getFastqCount('SRR2971307')
+```
+
+```{r}
+getFastqReads('SRR2971307',10)
+```
+
+```{r}
+getFastqReadsWithQuality('SRR2971307',10)
+```
+
