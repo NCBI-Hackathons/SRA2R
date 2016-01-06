@@ -13,16 +13,16 @@ vignette: >
 ---
 
 # Introduction
-Developed in 2007 with the object of storage data from large scale 
-studies including the Human Micorbiome Project as well the 1000 
-GenomesProject, the Sequencing Read Archive (SRA) is a public 
-repository developed as an initiative from the National Center for 
-Biotechnology Information (NCBI), the European Bioinformatics 
-Institute (EBI), and the DNA Data Bank of Japan (DDBJ).
+The Sequence Read Archive (SRA) is a public repository of raw sequencing data and 
+alignment information from high-throughput sequencing platforms, including 
+Roche 454 GS System, Illumina Genome Analyzer, Applied Biosystems SOLiD System, 
+Helicos Heliscope, Complete Genomics, and Pacific Biosciences SMRT. 
 
-Developed in 2007 to allocate raw sequencing data from biological 
-studies, processed by different platforms as Roche-454 Life Sciences, 
-Illumina Solexa and Applied Biosystems SOLiD.
+The SRA was developed by the National Center for Biotechnology Information (NCBI). Sequence data submitted to SRA is validated for quality and is given a permanent accession number . 
+
+Access to SRA data enhances reproducibility and provides a rich source of data for secondary analysis. The SRA Toolkit provides an API to access SRA data in a number of common file formats such as FASTQ. 
+
+SRA2R makes use of the SRA SDK and provides access to the SRA directly from R. 
 
 
 
@@ -46,7 +46,7 @@ acession number, and count the total number reads and reads after
 alingnment.
 
 ```{r}
-library(SRA2R)
+library(SRA2R) 
 readCount2('SRR789392')
 ```
 
@@ -95,7 +95,7 @@ The second argument follow the same parameters as **getFastqReads**.
 getFastqReadsWithQuality('SRR789392',10)
 ```
 
-To look the sequence for a specific region its necessary inform four 
+To look the sequence for a specific region its necessary four 
 parameters for **getSRAReadsWithRegion** function: the first one 
 comprises the run accession number, the second is the canonical name 
 of the reference, and the third and fourth positions are related to 
@@ -108,11 +108,27 @@ getSRAReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
 ## Alignment
 
 The function **alignReadsWithRegion** returns a list with information
- about the alignment for a SRA file. Its possible to access the 
+ about the alignment for a SRA file. Its possible to access data as 
  *readID*, *Canonical Name*, *position*, *longCigar*, 
- *mappingQuality*, *alignmentLength* and *sequence*.
+ *mappingQuality*, *alignmentLength* and *sequence*. Four 
+parameters anre need for running **alignReadsWithRegion** function:
+the first one comprises the run accession number, the second is the 
+canonical name of the reference, and the third and fourth positions 
+are related to the start and end position of the region of interest.
 
 ```{r}
 alignReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+```
+
+For the full sequence aligned try the function **alignReads**.
+
+```{r ar}
+ar = alignReads('SRR789392')
+```
+
+## PileUP
+
+```{r}
+getPileUp('SRR390728','16', 88155195, 88155207)
 ```
 
