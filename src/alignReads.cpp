@@ -106,7 +106,6 @@ Rcpp::List alignReadsWithRegion(Rcpp::String acc, Rcpp::String refname, int star
     ::Rf_error("c++ exception (unknown reason)"); 
     return -1;
   } //try ReadCollection run
-  
 }
 
 
