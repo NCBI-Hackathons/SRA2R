@@ -59,4 +59,3 @@ refBases('SRR2971307')
 
 ## Getting Reads 
 
-FASTQ files are often used 
