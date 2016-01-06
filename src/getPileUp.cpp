@@ -13,6 +13,7 @@
 
 #include <math.h>
 #include <iostream>
+#include <string>
 
 using namespace ngs;
 using namespace std;
@@ -63,7 +64,9 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
   vector<long> RefPos;
   vector<char> RefBase;
   vector<long> PileDepth;
-
+  vector<char> AlignedQuality;
+  vector<std::string>  AllAlignedQuality;
+  
   while ( it.nextPileup ())
   {
  if ( it.getPileupDepth () >= MinPileUpDepth ) { 
@@ -71,12 +74,24 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
         RefPos.push_back( it.getReferencePosition () + 1 );
         RefBase.push_back( it.getReferenceBase () );
         PileDepth.push_back(it.getPileupDepth ( ) );
-
+        AlignedQuality.clear();
+          
+        while ( it.nextPileupEvent() ){
+          
+        AlignedQuality.push_back( it.getAlignmentQuality() );
+       
+        }
+        std::string str(AlignedQuality.begin(),AlignedQuality.end());
+        AllAlignedQuality.push_back( str );  
+        
+        }
+        
+        
  } 
-  }
+  
   
   return DataFrame::create (
-      _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth
+      _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth, _["AllAlignedQuality"] = AllAlignedQuality
     
   );
   
