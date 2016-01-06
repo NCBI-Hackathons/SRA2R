@@ -24,8 +24,8 @@ readCount <- function(acc) {
 #' @export
 #' @examples
 #' reads('SRR000123')
-reads <- function(acc, n) {
-    .Call('SRA2R_reads', PACKAGE = 'SRA2R', acc, n)
+reads <- function(acc, n, lkup) {
+    .Call('SRA2R_reads', PACKAGE = 'SRA2R', acc, n, lkup)
 }
 
 #' The readCount in the read collection.

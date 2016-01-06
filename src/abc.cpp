@@ -1,4 +1,10 @@
+#include <math.h>
+#include <iostream>
+
+#include <R.h>
 #include <Rcpp.h>
+#include <Rinternals.h>
+
 #include <ncbi-vdb/NGS.hpp>
 #include <ngs-bam/ngs-bam.hpp>
 #include <ngs/ErrorMsg.hpp>
@@ -6,9 +12,12 @@
 #include <ngs/ReadIterator.hpp>
 #include <ngs/Read.hpp>
 
-
-#include <math.h>
-#include <iostream>
+extern "C" {
+  #include "S4Vectors_interface.h"
+  #include "IRanges_interface.h"
+  #include "XVector_interface.h"
+  #include "Biostrings_interface.h"
+}
 
 using namespace ngs;
 using namespace std;
@@ -48,13 +57,26 @@ long readCount(Rcpp::String acc) {
 //' @examples
 //' reads('SRR000123')
 // [[Rcpp::export]]
-List reads(Rcpp::String acc, int n) {
+List reads(Rcpp::String acc, int n, SEXP lkup) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
   ReadIterator rgi = run.getReads( Read::all );
+  
+  SEXP r_ans_width, r_ans;
+  XVectorList_holder r_ans_holder;
+  
+  PROTECT(r_ans_width = IntegerVector(1000));
+  PROTECT(r_ans = alloc_XRawList("DNAStringSet", "DNAString", r_ans_width));
+  
   vector<std::string> out;
-  for(int i = 0; rgi.nextRead() ; i++) {
+  for(int i = 0; rgi.nextRead() & (i < 990) ; i++) {
+    cout << i;
     while ( rgi.nextFragment() ) {
       out.push_back(rgi.getFragmentBases().toString());
+      Chars_holder r_ans_elt_holder = get_elt_from_XRawList_holder(&r_ans_holder, i);
+      Ocopy_bytes_to_i1i2_with_lkup(0, r_ans_elt_holder.length - 1,
+                                    (char *)r_ans_elt_holder.ptr, r_ans_elt_holder.length,
+                                    "ACTG", 4,
+                                    INTEGER(lkup), LENGTH(lkup));
     }
   }
   return List::create (

@@ -17,14 +17,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // reads
-List reads(Rcpp::String acc, int n);
-RcppExport SEXP SRA2R_reads(SEXP accSEXP, SEXP nSEXP) {
+List reads(Rcpp::String acc, int n, SEXP lkup);
+RcppExport SEXP SRA2R_reads(SEXP accSEXP, SEXP nSEXP, SEXP lkupSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    __result = Rcpp::wrap(reads(acc, n));
+    Rcpp::traits::input_parameter< SEXP >::type lkup(lkupSEXP);
+    __result = Rcpp::wrap(reads(acc, n, lkup));
     return __result;
 END_RCPP
 }
