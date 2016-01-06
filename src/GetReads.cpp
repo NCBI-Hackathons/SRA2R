@@ -50,17 +50,19 @@ long getFastqCount(Rcpp::String acc) {
 //' @return the reads in the collection
 //' @export
 //' @examples
-//' getFastqReads('SRR000123')
+//' getFastqReads('SRR000123',10)
 // [[Rcpp::export]]
-Rcpp::List getFastqReads(Rcpp::String acc) {
+Rcpp::List getFastqReads(Rcpp::String acc, long max_num_reads) {
   try {
     ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-    long MAX_ROW = run.getReadCount (); 
+    
+    if (max_num_reads<1) { max_num_reads = run.getReadCount (); }
+    
     
     ReadIterator rgi = run.getReads( Read::all );
     
     vector<std::string> out;
-    for(int i = 0; rgi.nextRead() ; i++) {
+    for(int i = 0; rgi.nextRead() && i<max_num_reads; i++) {
       while ( rgi.nextFragment() ) {
         out.push_back(rgi.getFragmentBases().toString());
       }
@@ -86,18 +88,19 @@ Rcpp::List getFastqReads(Rcpp::String acc) {
 //' @return the reads in the collection
 //' @export
 //' @examples
-//' getFastqReadsWithQuality('SRR000123')
+//' getFastqReadsWithQuality('SRR000123',10)
 // [[Rcpp::export]]
-Rcpp::List getFastqReadsWithQuality(Rcpp::String acc) {
+Rcpp::List getFastqReadsWithQuality(Rcpp::String acc, long max_num_reads) {
   try {
     ReadCollection run = ncbi::NGS::openReadCollection ( acc );
-    long MAX_ROW = run.getReadCount (); 
+    
+    if (max_num_reads<1) { max_num_reads = run.getReadCount (); }
     
     ReadIterator rgi = run.getReads( Read::all );
-    CharacterVector reads(MAX_ROW);
-    CharacterVector qualities(MAX_ROW);
+    CharacterVector reads(max_num_reads);
+    CharacterVector qualities(max_num_reads);
 
-    for(int i = 0; rgi.nextRead() && ( i < MAX_ROW ) ; i++) {
+    for(int i = 0; rgi.nextRead() && ( i < max_num_reads ) ; i++) {
       while ( rgi.nextFragment() ) {
         reads[i] = rgi.getFragmentBases().toString();
         qualities[i] = rgi.getFragmentQualities().toString();
