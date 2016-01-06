@@ -1,0 +1,5 @@
+Human Runs - NA12878
+ERR1051710 - No Alignment Whole Genome Synthetic Long Reads
+SRR1601905 - Aligned Whole Exome (8 level quality scores)
+SRR1238716 - Aligned Whole Genome Complete Genomics 
+SRR1153470 - No Alignment RNA-Seq
