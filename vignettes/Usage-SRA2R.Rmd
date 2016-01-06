@@ -31,6 +31,32 @@ Illumina Solexa and Applied Biosystems SOLiD.
 
 ## SRA Overview and Introspection Functions
 
+The following dependencies are necessary for using this package: 
+*Biostrings*, *XVector*, *IRanges*, *S4Vectors*.
 
+### Stats
+
+The *readCount2* function contains information of run acession 
+number, and count the total number reads and reads after alingnment.
+```{r}
+library(SRA2R)
+readCount2('SRR2971307')
+```
+
+*getReference* makes possible get access to all chomosome references 
+and extract information as the canonical and common names, length and
+alignment counts for each. 
+```{r}
+getReference('SRR2971307')
+```
+
+To have access to a complete nucleotide sequence for each reference, 
+the function *refBases* will return a list with the full sequence.
+(NOT SURE IF THIS ONE SHOULD BE HERE OR NOT, IN STATS)
+```{r}
+refBases('SRR2971307')
+```
 
 ## Getting Reads 
+
+FASTQ files are often used 
