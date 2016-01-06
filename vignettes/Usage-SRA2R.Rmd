@@ -13,11 +13,12 @@ vignette: >
 ---
 
 # Introduction
-Developed in 2007 with the object of storage data from larde scale 
-studies including the Human Micorbiome Project as well the 1000 Genomes
-Project, the Sequencing Read Archive (SRA) is an initiative from the 
-National Center for Biotechnology Information (NCBI), the European 
-Bioinformatics Institute (EBI), and the DNA Data Bank of Japan (DDBJ).
+Developed in 2007 with the object of storage data from large scale 
+studies including the Human Micorbiome Project as well the 1000 
+GenomesProject, the Sequencing Read Archive (SRA) is a public 
+repository developed as an initiative from the National Center for 
+Biotechnology Information (NCBI), the European Bioinformatics 
+Institute (EBI), and the DNA Data Bank of Japan (DDBJ).
 
 Developed in 2007 to allocate raw sequencing data from biological 
 studies, processed by different platforms as Roche-454 Life Sciences, 
@@ -29,5 +30,7 @@ Illumina Solexa and Applied Biosystems SOLiD.
 
 
 ## SRA Overview and Introspection Functions
+
+
 
 ## Getting Reads 
