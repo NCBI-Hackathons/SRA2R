@@ -5,19 +5,8 @@
 
 using namespace Rcpp;
 
-// readCount
-long readCount(Rcpp::String acc);
-RcppExport SEXP SRA2R_readCount(SEXP accSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
-    __result = Rcpp::wrap(readCount(acc));
-    return __result;
-END_RCPP
-}
 // reads
-List reads(Rcpp::String acc, int n, SEXP lkup);
+SEXP reads(Rcpp::String acc, int n, SEXP lkup);
 RcppExport SEXP SRA2R_reads(SEXP accSEXP, SEXP nSEXP, SEXP lkupSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
@@ -26,6 +15,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     Rcpp::traits::input_parameter< SEXP >::type lkup(lkupSEXP);
     __result = Rcpp::wrap(reads(acc, n, lkup));
+    return __result;
+END_RCPP
+}
+// read1
+SEXP read1(SEXP classname, SEXP acc, SEXP lkup);
+RcppExport SEXP SRA2R_read1(SEXP classnameSEXP, SEXP accSEXP, SEXP lkupSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< SEXP >::type classname(classnameSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type acc(accSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type lkup(lkupSEXP);
+    __result = Rcpp::wrap(read1(classname, acc, lkup));
     return __result;
 END_RCPP
 }
