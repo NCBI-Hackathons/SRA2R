@@ -54,4 +54,3 @@ List refBases(Rcpp::String acc) {
   return Rcpp::List::create(Rcpp::Named("referencebases") = rlist);
   
 }
-
