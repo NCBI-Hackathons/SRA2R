@@ -13,21 +13,25 @@ vignette: >
 ---
 
 # Introduction
-The Sequence Read Archive (SRA) is a public repository of raw sequencing data and 
-alignment information from high-throughput sequencing platforms, including 
-Roche 454 GS System, Illumina Genome Analyzer, Applied Biosystems SOLiD System, 
-Helicos Heliscope, Complete Genomics, and Pacific Biosciences SMRT. 
+The Sequence Read Archive (SRA) is a public repository of raw 
+sequencing data and alignment information from high-throughput 
+sequencing platforms, including Roche 454 GS System, Illumina Genome 
+Analyzer, Applied Biosystems SOLiD System, Helicos Heliscope, 
+Complete Genomics, and Pacific Biosciences SMRT. 
 
-The SRA was developed by the National Center for Biotechnology Information (NCBI). Sequence data submitted to SRA is validated for quality and is given a permanent accession number . 
+The SRA was developed by the National Center for Biotechnology 
+Information (NCBI). Sequence data submitted to SRA is validated for 
+quality and is given a permanent accession number. 
 
-Access to SRA data enhances reproducibility and provides a rich source of data for secondary analysis. The SRA Toolkit provides an API to access SRA data in a number of common file formats such as FASTQ. 
+Access to SRA data enhances reproducibility and provides a rich 
+source of data for secondary analysis. The SRA Toolkit provides an 
+API to access SRA data in a number of common file formats such as 
+FASTQ.
 
-SRA2R makes use of the SRA SDK and provides access to the SRA directly from R. 
-
-
+SRA2R makes use of the SRA SDK and provides access to the SRA 
+directly from R. 
 
 # Usage
-
 
 ## SRA Overview and Introspection Functions
 
