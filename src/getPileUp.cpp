@@ -1,4 +1,3 @@
-
 #include <Rcpp.h>
 #include <ncbi-vdb/NGS.hpp>
 #include <ngs-bam/ngs-bam.hpp>
@@ -6,19 +5,15 @@
 #include <ngs/ReadCollection.hpp>
 #include <ngs/ReadIterator.hpp>
 #include <ngs/Read.hpp>
-
 #include <ngs/Reference.hpp>
 #include <ngs/Alignment.hpp>
 #include <ngs/PileupIterator.hpp>
-
 #include <math.h>
 #include <iostream>
 #include <string>
-
 using namespace ngs;
 using namespace std;
 using namespace Rcpp;
-
 // This is a simple example of exporting a C++ function to R. You can
 // source this function into an R session using the Rcpp::sourceCpp 
 // function (or via the Source button on the editor toolbar). Learn
@@ -42,7 +37,7 @@ using namespace Rcpp;
 //' @examples
 //' getPileUp('SRR390728')
 // [[Rcpp::export]]
-DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int stop = 0, int MinPileUpDepth = 0 ) {
+DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int stop = 0, int MinPileUpDepth = 0, bool Quality = false ) {
   
   // open requested accession using SRA implementation of the API
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );
@@ -67,7 +62,7 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
   vector<std::string>  AllAlignedQuality;
   vector<char> AlignedBases;
   vector<std::string>  AllAlignedBases;
-  
+  vector<std::string> AllAcc;
   while ( it.nextPileup ())
   {
  if ( it.getPileupDepth () >= MinPileUpDepth ) { 
@@ -75,13 +70,18 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
         RefPos.push_back( it.getReferencePosition () + 1 );
         RefBase.push_back( it.getReferenceBase () );
         PileDepth.push_back(it.getPileupDepth ( ) );
+        AllAcc.push_back(acc);
+        
         AlignedQuality.clear();
         AlignedBases.clear();
         std::string base;          
           
         while ( it.nextPileupEvent() ){
           
+        if (Quality){
           AlignedQuality.push_back( it.getAlignmentQuality() );
+         }
+          
           PileupEvent::PileupEventType e = it.getEventType ();
             
             if(e & PileupEvent::alignment_start)
@@ -147,16 +147,44 @@ DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start = 1, int s
         }
         AllAlignedBases.push_back( base);  
         
+      if ( Quality ) {
         std::string str(AlignedQuality.begin(),AlignedQuality.end());
         AllAlignedQuality.push_back( str );  
-        
-        } 
+       }
+ }
   }
-  
+if ( Quality ) {
   return DataFrame::create (
-      _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth , _["AllAlignedBases"] = AllAlignedBases, _["AllAlignedQuality"] = AllAlignedQuality
-    
+      _["AccensionNumber"] = AllAcc, _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth , _["AllAlignedBases"] = AllAlignedBases,  _["AllAlignedQuality"] = AllAlignedQuality
   );
+  }
+  else{
+    return DataFrame::create (
+        _["ReferenceSpec"] = RefSpec, _["ReferencePosition"] = RefPos, _["ReferenceBase"] = RefBase, _["PileupDepth"] = PileDepth , _["AllAlignedBases"] = AllAlignedBases, _["AccensionNumber"] = AllAcc
+    
+   );
+  }
+
   
 }
+
+//Ran 1/8/2016
+//> system.time(getPileUp("SRR1596669",'21',1,20000000, Quality =  F))
+//user  system elapsed 
+//43.599   2.495  46.664 
+//> system.time(getPileUp("SRR1596669",'21',1,20000000, Quality =  T))
+//user  system elapsed 
+//60.158   1.885  70.376 
+
+//Ran 1/13/2016
+//> system.time(getPileUp("SRR1596669",'21',1,20000000, Quality =  F))
+//  user  system elapsed 
+//  48.756   1.363  50.284 
+//> system.time(getPileUp("SRR1596669",'21',1,20000000, Quality =  T))
+//  user  system elapsed 
+//  48.212   1.320  49.536
+
+
+
+
 

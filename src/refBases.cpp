@@ -22,8 +22,6 @@ using namespace Rcpp;
 //   http://www.rcpp.org/
 //   http://adv-r.had.co.nz/Rcpp.html
 //   http://gallery.rcpp.org/
-//s
-
 //' The readCount in the read collection.
 //'
 //' This simply returns the full read count.
@@ -32,10 +30,6 @@ using namespace Rcpp;
 //' @return the number of reads in the collection
 //' @export
 //' 
-/* getReferenceBases
- *  return sub-sequence bases for Reference
- *  "offset" is zero-based
- */
 // [[Rcpp::export]]
 List refBases(Rcpp::String acc) {
   ReadCollection run = ncbi::NGS::openReadCollection ( acc );

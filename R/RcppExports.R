@@ -32,10 +32,41 @@ read1 <- function(classname, acc, lkup) {
     .Call('SRA2R_read1', PACKAGE = 'SRA2R', classname, acc, lkup)
 }
 
+#' Read alignment
+#'
+#' This returns the aligned reads.
+#'
+#' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+#' @param ref The reference name 
+#' @param start Start position (inclusive)
+#' @param stop End position (inclusive)
+#' @return aligned reads
+#' @export
+#' @examples
+#' alignReadsWithRegion('SRR789392','NC_000020.10', 62926240, 62958722)
+#' alignReadsWithRegion('SRR789334','NC_000020.10', 62926240, 62958722)
+alignReadsWithRegion <- function(acc, refname, start, stop) {
+    .Call('SRA2R_alignReadsWithRegion', PACKAGE = 'SRA2R', acc, refname, start, stop)
+}
+
+#' Read alignment
+#'
+#' This returns the aligned reads.
+#'
+#' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+#' @return aligned reads
+#' @export
+#' @examples
+#' alignReads('SRR789392')
+#' alignReads('SRR789334')
+alignReads <- function(acc) {
+    .Call('SRA2R_alignReads', PACKAGE = 'SRA2R', acc)
+}
+
 #' The readCount in the read collection.
 #'
 #' This simply returns the full read count.
-#'
+#' @author Nick Bernstein
 #' @param acc An accession or a path to an actual SRA file (with .sra suffix)
 #' @param refname Reference name for pile up
 #' @param start An in for position of start of pileup
@@ -45,8 +76,8 @@ read1 <- function(classname, acc, lkup) {
 #' @export
 #' @examples
 #' getPileUp('SRR390728')
-getPileUp <- function(acc, refname, start = 1L, stop = 0L, MinPileUpDepth = 0L) {
-    .Call('SRA2R_getPileUp', PACKAGE = 'SRA2R', acc, refname, start, stop, MinPileUpDepth)
+getPileUp <- function(acc, refname, start = 1L, stop = 0L, MinPileUpDepth = 0L, Quality = FALSE) {
+    .Call('SRA2R_getPileUp', PACKAGE = 'SRA2R', acc, refname, start, stop, MinPileUpDepth, Quality)
 }
 
 #' The readCount in the read collection.
@@ -71,9 +102,9 @@ getFastqCount <- function(acc) {
 #' @return the reads in the collection
 #' @export
 #' @examples
-#' getFastqReads('SRR000123')
-getFastqReads <- function(acc) {
-    .Call('SRA2R_getFastqReads', PACKAGE = 'SRA2R', acc)
+#' getFastqReads('SRR000123',10)
+getFastqReads <- function(acc, max_num_reads) {
+    .Call('SRA2R_getFastqReads', PACKAGE = 'SRA2R', acc, max_num_reads)
 }
 
 #' The reads in the read collection.
@@ -85,9 +116,9 @@ getFastqReads <- function(acc) {
 #' @return the reads in the collection
 #' @export
 #' @examples
-#' getFastqReadsWithQuality('SRR000123')
-getFastqReadsWithQuality <- function(acc) {
-    .Call('SRA2R_getFastqReadsWithQuality', PACKAGE = 'SRA2R', acc)
+#' getFastqReadsWithQuality('SRR000123',10)
+getFastqReadsWithQuality <- function(acc, max_num_reads) {
+    .Call('SRA2R_getFastqReadsWithQuality', PACKAGE = 'SRA2R', acc, max_num_reads)
 }
 
 #' The reads in the specified region in an SRA record.
@@ -133,5 +164,32 @@ getBamReadsWithRegion <- function(acc, refname, start, stop) {
 #' getReference('SRR390728')
 getReference <- function(acc) {
     .Call('SRA2R_getReference', PACKAGE = 'SRA2R', acc)
+}
+
+#' The readCount in the read collection.
+#'
+#' This simply returns the full read count.
+#'
+#' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+#' @return the number of reads in the collection
+#' @export
+#' 
+NULL
+
+refBases <- function(acc) {
+    .Call('SRA2R_refBases', PACKAGE = 'SRA2R', acc)
+}
+
+#' The readCount in the read collection.
+#'
+#' This simply returns the full read count.
+#'
+#' @param acc An accession or a path to an actual SRA file (with .sra suffix)
+#' @return the number of reads in the collection
+#' @export
+#' @examples
+#' readCount('SRR000123')
+readCount2 <- function(acc) {
+    .Call('SRA2R_readCount2', PACKAGE = 'SRA2R', acc)
 }
 

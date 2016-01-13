@@ -31,9 +31,34 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// alignReadsWithRegion
+Rcpp::List alignReadsWithRegion(Rcpp::String acc, Rcpp::String refname, int start, int stop);
+RcppExport SEXP SRA2R_alignReadsWithRegion(SEXP accSEXP, SEXP refnameSEXP, SEXP startSEXP, SEXP stopSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
+    Rcpp::traits::input_parameter< Rcpp::String >::type refname(refnameSEXP);
+    Rcpp::traits::input_parameter< int >::type start(startSEXP);
+    Rcpp::traits::input_parameter< int >::type stop(stopSEXP);
+    __result = Rcpp::wrap(alignReadsWithRegion(acc, refname, start, stop));
+    return __result;
+END_RCPP
+}
+// alignReads
+Rcpp::List alignReads(Rcpp::String acc);
+RcppExport SEXP SRA2R_alignReads(SEXP accSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
+    __result = Rcpp::wrap(alignReads(acc));
+    return __result;
+END_RCPP
+}
 // getPileUp
-DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start, int stop, int MinPileUpDepth);
-RcppExport SEXP SRA2R_getPileUp(SEXP accSEXP, SEXP refnameSEXP, SEXP startSEXP, SEXP stopSEXP, SEXP MinPileUpDepthSEXP) {
+DataFrame getPileUp(Rcpp::String acc, Rcpp::String refname, int start, int stop, int MinPileUpDepth, bool Quality);
+RcppExport SEXP SRA2R_getPileUp(SEXP accSEXP, SEXP refnameSEXP, SEXP startSEXP, SEXP stopSEXP, SEXP MinPileUpDepthSEXP, SEXP QualitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -42,7 +67,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type start(startSEXP);
     Rcpp::traits::input_parameter< int >::type stop(stopSEXP);
     Rcpp::traits::input_parameter< int >::type MinPileUpDepth(MinPileUpDepthSEXP);
-    __result = Rcpp::wrap(getPileUp(acc, refname, start, stop, MinPileUpDepth));
+    Rcpp::traits::input_parameter< bool >::type Quality(QualitySEXP);
+    __result = Rcpp::wrap(getPileUp(acc, refname, start, stop, MinPileUpDepth, Quality));
     return __result;
 END_RCPP
 }
@@ -58,24 +84,26 @@ BEGIN_RCPP
 END_RCPP
 }
 // getFastqReads
-Rcpp::List getFastqReads(Rcpp::String acc);
-RcppExport SEXP SRA2R_getFastqReads(SEXP accSEXP) {
+Rcpp::List getFastqReads(Rcpp::String acc, long max_num_reads);
+RcppExport SEXP SRA2R_getFastqReads(SEXP accSEXP, SEXP max_num_readsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
-    __result = Rcpp::wrap(getFastqReads(acc));
+    Rcpp::traits::input_parameter< long >::type max_num_reads(max_num_readsSEXP);
+    __result = Rcpp::wrap(getFastqReads(acc, max_num_reads));
     return __result;
 END_RCPP
 }
 // getFastqReadsWithQuality
-Rcpp::List getFastqReadsWithQuality(Rcpp::String acc);
-RcppExport SEXP SRA2R_getFastqReadsWithQuality(SEXP accSEXP) {
+Rcpp::List getFastqReadsWithQuality(Rcpp::String acc, long max_num_reads);
+RcppExport SEXP SRA2R_getFastqReadsWithQuality(SEXP accSEXP, SEXP max_num_readsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
-    __result = Rcpp::wrap(getFastqReadsWithQuality(acc));
+    Rcpp::traits::input_parameter< long >::type max_num_reads(max_num_readsSEXP);
+    __result = Rcpp::wrap(getFastqReadsWithQuality(acc, max_num_reads));
     return __result;
 END_RCPP
 }
@@ -115,6 +143,28 @@ BEGIN_RCPP
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
     __result = Rcpp::wrap(getReference(acc));
+    return __result;
+END_RCPP
+}
+// refBases
+List refBases(Rcpp::String acc);
+RcppExport SEXP SRA2R_refBases(SEXP accSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
+    __result = Rcpp::wrap(refBases(acc));
+    return __result;
+END_RCPP
+}
+// readCount2
+List readCount2(Rcpp::String acc);
+RcppExport SEXP SRA2R_readCount2(SEXP accSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< Rcpp::String >::type acc(accSEXP);
+    __result = Rcpp::wrap(readCount2(acc));
     return __result;
 END_RCPP
 }
