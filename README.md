@@ -53,6 +53,3 @@ x = read.delim(text = system('~/sratoolkit.2.5.7-ubuntu64/bin/sra-pileup -r chr2
 - http://statr.me/rcpp-note/index.html
 - https://cran.r-project.org/web/packages/Rcpp/vignettes/
 
-## Link to presentation to a small example of using read fastq from SRA
-
-- http://ec2-52-90-90-120.compute-1.amazonaws.com/presentation/view#/
