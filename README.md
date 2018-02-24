@@ -1,51 +1,9 @@
 # SRA2R
+
 SRA2R, a package to import SRA data directly into R
 
-## The Vignette
+**This package is not maintained and is currently not functional.**
 
-http://watson.nci.nih.gov/~sdavis/sra.html
-
-## The AWS Instance Details
-
-http://ec2-52-90-90-120.compute-1.amazonaws.com/
-
-```
-chmod 400 ncbi_sra2r.pem
-ssh -i 'ncbi_sra2r.pem' ubuntu@ec2-52-90-90-120.compute-1.amazonaws.com
-su - userXXX
-```
-
-```
-download.file('http://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/2.5.7/sratoolkit.2.5.7-ubuntu64.tar.gz',destfile='~/sratoolkit.2.5.7-ubuntu64.tar.gz')
-untar('~/sratoolkit.2.5.7-ubuntu64.tar.gz',compressed=TRUE)
-```
-
-### git setup for github
-
-Before using git with github, you'll want to do this on the AWS instance.
-
-```
-ssh-keygen
-cat ~/.ssh/id_rsa.pub
-```
-
-copy the contents of that string to the github settings/ssh keys location
-
-```
-git config --global user.name 'My Name'
-git config --global user.email 'myemail@email.com'
-```
-
-### Developing on the package
-
-Checkout the package using git (or Rstudio) and change the working directory to the 
-SRA2R directory (with the DESCRIPTION file in it).
-
-```
-install.packages('devtools')
-devtools::document()
-devtools::load_all()
-```
 
 ## SRA ToolKit examples
 
